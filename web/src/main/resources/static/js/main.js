@@ -120,6 +120,11 @@ $(document).ready(function(){
         return false;
       });
       $('.dropdown a.dropdown-toggle').first().on('click', function(e) {
+        // TODO maybe close the submenu when the main menu loses focus,
+        //   e.g. if you click on another part of the page,
+        //   but do not close it if it loses focus because you clicked on
+        //   the submenu
+
         // when you click on the main menu and you are about to close it
         // make sure submenu is closed too
         if ($(this).next().hasClass('show')) { // main menu is about to have show removed
