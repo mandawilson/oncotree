@@ -85,26 +85,38 @@ $(document).ready(function(){
           if (displayed_version === item) {
             selected_class = ' active';
           }
-          var option = '<button class="dropdown-item' + selected_class + '" type="button" data-desc="' + available_versions[item].description + '"  hash="' + _hash + '">' + item + '</button>';
+          var option = '<li><a href="#" class="dropdown-item' + selected_class + '" data-desc="' + available_versions[item].description + '"  hash="' + _hash + '">' + item + '</a></li>';
           var this_item_is_visible = available_versions[item].visible;
           if (!this_item_is_visible && previous_version_was_visible) {
-            //option_list_html.push('<option class="item" hash="disabled" disabled>' + '&HorizontalLine;'.repeat(10) + '</option>')
-            option_list_html.push('<div class="dropdown-divider"></div>');
+            option_list_html.push('<li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">More</a><ul class="dropdown-menu">');
           }
           option_list_html.push(option);
           previous_version_was_visible = this_item_is_visible;
         });
+        option_list_html.push('</li></ul>'); // end submenu
      
       $('#other-version .other-version-content').html(option_list_html.join(''));
-      $('#oncotree-version-note').append($("#other-version .other-version-content :selected").data("desc"));
-      $('#other-version .other-version-content').change(function() {
-        var _hash = $(this)[0].selectedOptions[0].attributes['hash'].value;
+      $('#oncotree-version-label').append($("#other-version .other-version-content .active").text());
+      $('#oncotree-version-note').append($("#other-version .other-version-content .active").data("desc"));
+      $('#other-version .dropdown-item').not('.dropdown-toggle').click(function() {
+        var _hash = $(this)[0].attributes['hash'].value;
         window.location.hash = _hash;
         window.location.reload();
       })
     }
 
     function initEvents() {
+      $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
+        if (!$(this).next().hasClass('show')) {
+          $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+        }
+        var $subMenu = $(this).next(".dropdown-menu");
+        $subMenu.toggleClass('show');
+        $(this).parents('dropdown.show').on('hidden.bs.dropdown', function(e) {
+          $('.dropdown-submenu .show').removeClass("show");
+        });
+        return false;
+      });
       $('#tumor_search button').click(function() {
         OutJS.search();
       });

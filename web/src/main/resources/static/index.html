@@ -5,7 +5,7 @@
     <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css?03132019"/>
     <link type="text/css" rel="stylesheet" href="open-iconic/font/css/open-iconic-bootstrap.min.css?04182018"/>
     <link rel="stylesheet" type="text/css" href="css/jquery.qtip.min.css?04182018">
-    <link type="text/css" rel="stylesheet" href="css/style.css?05022016"/>
+    <link type="text/css" rel="stylesheet" href="css/style.css?03182019"/>
     <script type="text/javascript" src="js/jquery-3.3.1.min.js?04182018"></script>
     <script type="text/javascript" src="js/d3.v3.min.js?04182018"></script>
     <script type="text/javascript" src="js/popper.min.js?03132019""></script>
@@ -49,11 +49,11 @@
                 If you cannot see the tree below in Internet Explorer, please use Firefox or Chrome.
               </p>
               <div class="alert alert-info" role="alert">
-                <span>Currently displaying : </span>
+                <span>Currently displaying : <span id="oncotree-version-label"></span></span>
                 <div class="dropdown" id="other-version">
-                  <button class="btn btn-secondary dropdown-toggle" type="button" id="versionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Version list</button>
-                  <div class="other-version-content dropdown-menu" aria-labelledby="versionMenuButton">
-                  </div>
+                  <a href="#" class="btn btn-light dropdown-toggle" id="versionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Change Oncotree version</a>
+                  <ul class="other-version-content dropdown-menu" aria-labelledby="versionMenuButton">
+                  </ul>
                 </div>
                 <div><span id="oncotree-version-statistics"></span></div>
                 <div><span id='oncotree-version-note'></span></div>
