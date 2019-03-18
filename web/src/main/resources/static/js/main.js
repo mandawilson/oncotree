@@ -80,18 +80,21 @@ $(document).ready(function(){
       sorted_version_list.forEach(
         function(item) {
           var _hash = '#/home?version=' + item;
-          var selected_attribute = '';
+          // TODO
+          var selected_class = '';
           if (displayed_version === item) {
-            selected_attribute = ' selected';
+            selected_class = ' active';
           }
-          var option = '<option data-desc="' + available_versions[item].description + '" class="item" hash="' + _hash + '" ' + selected_attribute + '>' + item + '</option>';
+          var option = '<button class="dropdown-item' + selected_class + '" type="button" data-desc="' + available_versions[item].description + '"  hash="' + _hash + '">' + item + '</button>';
           var this_item_is_visible = available_versions[item].visible;
           if (!this_item_is_visible && previous_version_was_visible) {
-            option_list_html.push('<option class="item" hash="disabled" disabled>' + '&HorizontalLine;'.repeat(10) + '</option>')
+            //option_list_html.push('<option class="item" hash="disabled" disabled>' + '&HorizontalLine;'.repeat(10) + '</option>')
+            option_list_html.push('<div class="dropdown-divider"></div>');
           }
           option_list_html.push(option);
           previous_version_was_visible = this_item_is_visible;
         });
+     
       $('#other-version .other-version-content').html(option_list_html.join(''));
       $('#oncotree-version-note').append($("#other-version .other-version-content :selected").data("desc"));
       $('#other-version .other-version-content').change(function() {
