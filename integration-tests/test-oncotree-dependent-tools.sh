@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TESTING_DIRECTORY=/var/lib/jenkins/tempdir
+TESTING_DIRECTORY=/home/wilson/oncotree_integration_tests/tmp
 if [ ! -d $TESTING_DIRECTORY ] ; then
     mkdir -p $TESTING_DIRECTORY
 fi
@@ -19,7 +19,7 @@ ONCOTREE_URI_TO_ONCOTREE_CODE_MAPPING_FILEPATH=$ONCOTREE_DIRECTORY/resources/res
 ONCOTREE_JAR=$ONCOTREE_DIRECTORY/web/target/oncotree.jar
 IMPORT_SCRIPTS_DIRECTORY=$CMO_PIPELINES_DIRECTORY/import-scripts
 
-JENKINS_USER_HOME_DIRECTORY=/var/lib/jenkins
+JENKINS_USER_HOME_DIRECTORY=/home/wilson/oncotree_integration_tests
 JENKINS_PROPERTIES_DIRECTORY=$JENKINS_USER_HOME_DIRECTORY/pipelines-configuration/properties
 JENKINS_TEST_APPLICATION_PROPERTIES=jenkins.test.application.properties
 APPLICATION_PROPERTIES=application.properties
@@ -32,6 +32,23 @@ ONCOTREE_VERSION_MAPPER_TEST_SUCCESS=0
 ONCOTREE_TOPBRAID_URI_VALIDATION_SUCCESS=0
 
 TOMCAT_SHUTDOWN_WAIT_TIME=10
+
+# fetch oncotree and cmo-pipelines
+function pull_git_repo {
+    cwd=`pwd`
+    repo=$1
+    if [ ! -d $repo ] ; then
+        echo "git repository $repo does not exist"
+        exit 1
+    fi
+    cd $repo; git checkout master; git pull; cd $cwd
+}
+
+# TODO can we count on the person to install these repos?
+# obviously the oncotree one has been installed
+# they would need to have the right version of both repos checked out
+pull_git_repo $CMO_PIPELINES_DIRECTORY
+pull_git_repo $ONCOTREE_DIRECTORY
 
 # will be automatically called when script exits
 # provided $ONCOTREE_PORT is defined, will find process number for process on that port and kill it
@@ -98,12 +115,12 @@ if [ $ONCOTREE_PORT -gt 0 ] ; then
     # maximum time to wait for OncoTree to deploy (MAXIMUM_WAIT_TIME/60) minutes
     # every TIME_BETWEEN_ONCOTREE_AVAILIBILITY_TESTS seconds check if job is still running
     # attempt to hit endpoint - successful return code indicated ONCOTREE has started up
-    ONCOTREE_URL="http://dashi-dev.cbio.mskcc.org:$ONCOTREE_PORT"
+    ONCOTREE_URL="http://localhost:$ONCOTREE_PORT"
     while [ $ONCOTREE_DEPLOYMENT_SUCCESS -eq 0 ] ; do
         # try sleeping here, checking without a sleep seems to not find the job
         sleep $TIME_BETWEEN_ONCOTREE_AVAILIBILITY_TESTS
         CURRENT_WAIT_TIME=$(($CURRENT_WAIT_TIME + $TIME_BETWEEN_ONCOTREE_AVAILIBILITY_TESTS))
-        JOB_RUNNING=`ps -f -u jenkins | grep "oncotree.jar"`
+        JOB_RUNNING=`ps -f -u wilson | grep "oncotree.jar"`
         echo "Status of all jenkins jobs in ps matching oncotree.jar: $JOB_RUNNING"
         # -z is testing if the string is empty, if it is not empty the job is running
         if [ ! -z "$JOB_RUNNING" ] ; then
